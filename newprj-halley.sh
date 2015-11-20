@@ -54,6 +54,7 @@
 VERSION="v3r0"; # Wed Dec  4 21:53:57 COT 2013
 # first version
 
+dir_projects=$HOME/crk_projects
 
 showhelp() {
   echo 
@@ -93,10 +94,11 @@ while getopts ':s:p:u:d:?' opt; do
       echo -e "#  WARNING: This action can not be undone"
       echo -e "#  WARNING: Press enter to continue, ctrl-c to abort"
       read
-      for i in $(seq 0 5); do
-        echo -e "#  erasing project on halley$i"
-        ssh h${i} rm -r /home/h$i/${prj}
-      done
+      rm -r ${dir_projects}/${prj}
+      #for i in $(seq 0 5); do
+      #  echo -e "#  erasing project on halley$i"
+      #  ssh h${i} rm -r /home/h$i/${prj}
+      #done
       echo -e "#  ALL DONE. Exit"
       exit 0;
       ;;
@@ -143,23 +145,26 @@ echo; echo -e "#  READY: Press enter to continue, <ctrl-c> to abort!"
 read
 ##############
 
-mkdir /home/h0/${prj}
-cp -r ${src}/run/* /home/h0/${prj}/
-for i in $(seq 1 5); do
-  rsync -aP /home/h0/${prj} h${i}:/home/h${i}
-done
+#mkdir /home/h0/${prj}
+mkdir ${dir_projects}/${prj}
+#cp -r ${src}/run/* /home/h0/${prj}/
+cp -pr ${src}/run/* ${dir_projects}/${prj}/      # copy Corsika binaries
+#for i in $(seq 1 5); do
+#  rsync -aP /home/h0/${prj} h${i}:/home/h${i}
+#done
 
 #### Adding this project to .bashrc
-echo "alias ${prj}=\"cd /home/h\${hn}/${prj}; ls -l\"" >> ~/.bashrc
-for i in $(seq 1 5); do
-    rsync -aP ~/.bashrc h${i}:
-done
+#echo "alias ${prj}=\"cd /home/h\${hn}/${prj}; ls -l\"" >> ~/.bashrc
+echo "alias crk_${prj}=\"cd ${dir_projects}/${prj}; ls -lhtr\"" >> ~/.bashrc
+#for i in $(seq 1 5); do
+#    rsync -aP ~/.bashrc h${i}:
+#done
 source ~/.bashrc
 
 echo
 echo
 echo -e "#  DONE: Project ${prj} has been created. You can access the project folder"
-echo -e "#        by just typing ${prj} anywhere."
+echo -e "#        by just typing crk_${prj} anywhere."
 echo -e "#"
 echo -e "#        Run do_halley.sh to continue"
 echo
