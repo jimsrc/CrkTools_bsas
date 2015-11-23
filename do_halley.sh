@@ -246,7 +246,8 @@ fi
 codename=$(echo $wdir | sed -e 's/\/home\/h0\///' | sed -e 's/\///')
 home=$wdir
 direct=$home/$prj
-basecrktools=/home/h0/apps/crktools
+#basecrktools=/home/h0/apps/crktools
+basecrktools=$HOME/software/CrkTools_bsas   # directorio crktools en soleil
 
 ##############
 options="-w ${wdir} -t ${tim} -p ${prj} "
@@ -280,19 +281,20 @@ st=0
 en=5
 
 if $cta; then
-  for i in $(seq $st $en); do
-    u=$(echo $wdir | sed -e "s/h0/h${i}/")
-    scp $basecrktools/rain.pl h${i}:$u/
-    rain="./rain.pl -z"
-  done
+  #for i in $(seq $st $en); do
+  #  u=$(echo $wdir | sed -e "s/h0/h${i}/")
+  #  scp $basecrktools/rain.pl h${i}:$u/
+  #done
+  rain="./rain.pl -z"
 else
-  for i in $(seq $st $en); do 
-    u=$(echo $wdir | sed -e "s/h0/h${i}/")
-    scp $basecrktools/rain.pl h${i}:$u/
-    rain="./rain.pl "
-  done
+  #for i in $(seq $st $en); do 
+  #  u=$(echo $wdir | sed -e "s/h0/h${i}/")
+  #  scp $basecrktools/rain.pl h${i}:$u/
+  #done
+  rain="./rain.pl "
 fi
 
+#++++ TODO:also this for soleil?
 rain="$rain -i" # enable halley mode (not use PLOTSH and COMOUT)
 
 if $sites; then
@@ -313,16 +315,19 @@ echo "#!/bin/bash
 h=\$(hostname | awk '{if (\$1==\"frontend\") {print 0} else if (\$1==\"hernan\") {print 5} else {print \$0}}' | sed -e 's/halley0//')
 t=19
 for i in 001206 001608 000703 002412 001105; do
-  r=\"$(echo $rain | sed -e 's/h0/h\${h}/')\"
+  #r=\"$(echo $rain | sed -e 's/h0/h\${h}/')\"
+  r=\"$(echo $rain)\"
   if [ \$t -gt 3 ]; then t=19; fi
   nice -n \$t \${r}
   t=\$[t+1];
 done
-for i in \$(seq $st $en); do
-  echo \"Updating script go-$prj-all-01.sh in halley0\${i}\"
-  ssh h\${i} chmod 644 /home/h\${i}/$codename/go-$prj-all-01.sh
-  ssh h\${i} mv /home/h\${i}/$codename/go-$prj-all-01.sh /home/h\${i}/$codename/go-$prj-all-01-halley0\${h}.run
-done
+
+#+++++ actualizar con los demas nodos
+#for i in \$(seq $st $en); do
+#  echo \"Updating script go-$prj-all-01.sh in halley0\${i}\"
+#  ssh h\${i} chmod 644 /home/h\${i}/$codename/go-$prj-all-01.sh
+#  ssh h\${i} mv /home/h\${i}/$codename/go-$prj-all-01.sh /home/h\${i}/$codename/go-$prj-all-01-halley0\${h}.run
+#done
 " > $wdir/go-$prj-all-01.sh
 chmod 744 $wdir/go-$prj-all-01.sh
 
@@ -331,16 +336,19 @@ echo "#!/bin/bash
 h=\$(hostname | awk '{if (\$1==\"frontend\") {print 0} else if (\$1==\"hernan\") {print 5} else {print \$0}}' | sed -e 's/halley0//')
 t=19
 for i in 002814 001407 002010 005626 000904 003216 002713; do
-  r=\"$(echo $rain | sed -e 's/h0/h\${h}/')\"
+  #r=\"$(echo $rain | sed -e 's/h0/h\${h}/')\"
+  r=\"$(echo $rain)\"
   if [ \$t -gt 4 ]; then t=19; fi
   nice -n \$t \${r}
   t=\$[t+1];
 done
-for i in \$(seq $st $en); do
-  echo \"Updating script go-$prj-all-02.sh in halley0\${i}\"
-  ssh h\${i} chmod 644 /home/h\${i}/$codename/go-$prj-all-02.sh
-  ssh h\${i} mv /home/h\${i}/$codename/go-$prj-all-02.sh /home/h\${i}/$codename/go-$prj-all-02-halley0\${h}.run
-done
+
+#+++++ actualizar con los demas nodos
+#for i in \$(seq $st $en); do
+#  echo \"Updating script go-$prj-all-02.sh in halley0\${i}\"
+#  ssh h\${i} chmod 644 /home/h\${i}/$codename/go-$prj-all-02.sh
+#  ssh h\${i} mv /home/h\${i}/$codename/go-$prj-all-02.sh /home/h\${i}/$codename/go-$prj-all-02-halley0\${h}.run
+#done
 " > $wdir/go-$prj-all-02.sh
 chmod 744 $wdir/go-$prj-all-02.sh
 
@@ -349,16 +357,19 @@ echo "#!/bin/bash
 h=\$(hostname | awk '{if (\$1==\"frontend\") {print 0} else if (\$1==\"hernan\") {print 5} else {print \$0}}' | sed -e 's/halley0//')
 t=19
 for i in 002311 004020 001909 005224 004018 004822 005525 003919 005123 003115 003517 004521; do
-  r=\"$(echo $rain | sed -e 's/h0/h\${h}/')\"
+  #r=\"$(echo $rain | sed -e 's/h0/h\${h}/')\"
+  r=\"$(echo $rain)\"
   if [ \$t -gt 4 ]; then t=19; fi
   nice -n \$t \${r}
   t=\$[t+1];
 done
-for i in \$(seq $st $en); do
-  echo \"Updating script go-$prj-all-03.sh in halley0\${i}\"
-  ssh h\${i} chmod 644 /home/h\${i}/$codename/go-$prj-all-03.sh
-  ssh h\${i} mv /home/h\${i}/$codename/go-$prj-all-03.sh /home/h\${i}/$codename/go-$prj-all-03-halley0\${h}.run
-done
+
+#+++++ actualizar con los demas nodos
+#for i in \$(seq $st $en); do
+#  echo \"Updating script go-$prj-all-03.sh in halley0\${i}\"
+#  ssh h\${i} chmod 644 /home/h\${i}/$codename/go-$prj-all-03.sh
+#  ssh h\${i} mv /home/h\${i}/$codename/go-$prj-all-03.sh /home/h\${i}/$codename/go-$prj-all-03-halley0\${h}.run
+#done
 " > $wdir/go-$prj-all-03.sh
 chmod 744 $wdir/go-$prj-all-03.sh
 
@@ -379,16 +390,19 @@ h=\$(hostname | awk '{if (\$1==\"frontend\") {print 0} else if (\$1==\"hernan\")
 t=19
 for j in \$(seq 1 $prcHe); do
   i="0\${j}0402"
-  r=\"$(echo $rain | sed -e 's/h0/h\${h}/')\"
+  #r=\"$(echo $rain | sed -e 's/h0/h\${h}/')\"
+  r=\"$(echo $rain)\"
   if [ \$t -gt 4 ]; then t=19; fi
   nice -n \$t \$r
   t=\$[t+1];
 done
-for i in \$(seq $st $en); do
-  echo \"Updating script go-$prj-he.sh in halley0\${i}\"
-  ssh h\${i} chmod 644 /home/h\${i}/$codename/go-$prj-he.sh
-  ssh h\${i} mv /home/h\${i}/$codename/go-$prj-he.sh /home/h\${i}/$codename/go-$prj-he-halley0\${h}.run
-done
+
+#+++++ actualizar con los demas nodos
+#for i in \$(seq $st $en); do
+#  echo \"Updating script go-$prj-he.sh in halley0\${i}\"
+#  ssh h\${i} chmod 644 /home/h\${i}/$codename/go-$prj-he.sh
+#  ssh h\${i} mv /home/h\${i}/$codename/go-$prj-he.sh /home/h\${i}/$codename/go-$prj-he-halley0\${h}.run
+#done
 " > $wdir/go-$prj-he.sh
 chmod 744 $wdir/go-${prj}-he.sh
 rm $wdir/$prj/000402-*.run
@@ -417,15 +431,18 @@ for j in \$(seq $ii $ff); do
   printf -v n "%02d" \$j
   i="\${n}0014"
   if [ \$t -gt 4 ]; then t=19; fi
-  r=\"$(echo $rain | sed -e 's/h0/h\${h}/')\"
+  #r=\"$(echo $rain | sed -e 's/h0/h\${h}/')\"
+  r=\"$(echo $rain)\"
   nice -n \$t \${r}
   t=\$[t+1];
 done
-for k in \$(seq $st $en); do
-  echo \"Updating script go-$prj-pr-$i.sh in halley0\${k}\"
-  ssh h\${k} chmod 644 /home/h\${k}/$codename/go-$prj-pr-$i.sh
-  ssh h\${k} mv /home/h\${k}/$codename/go-$prj-pr-$i.sh /home/h\${k}/$codename/go-$prj-pr-$i-halley0\${h}.run
-done
+
+#+++++ actualizar con los demas nodos
+#for k in \$(seq $st $en); do
+#  echo \"Updating script go-$prj-pr-$i.sh in halley0\${k}\"
+#  ssh h\${k} chmod 644 /home/h\${k}/$codename/go-$prj-pr-$i.sh
+#  ssh h\${k} mv /home/h\${k}/$codename/go-$prj-pr-$i.sh /home/h\${k}/$codename/go-$prj-pr-$i-halley0\${h}.run
+#done
 " > $wdir/go-${prj}-pr-$i.sh
 done
 
@@ -434,9 +451,9 @@ for i in $(seq 1 $multPr); do
   chmod 744 $wdir/go-${prj}-pr-$i.sh
 done
 
-st=$((st+1))
-for i in $(seq $st $en); do
-  echo "Copying scripts to halley0${i}"
-  scp -r $wdir/${prj} h${i}:/home/h${i}/$codename/
-  scp -r $wdir/go-${prj}-*.sh h${i}:/home/h${i}/$codename/
-done
+#st=$((st+1))
+#for i in $(seq $st $en); do
+#  echo "Copying scripts to halley0${i}"
+#  scp -r $wdir/${prj} h${i}:/home/h${i}/$codename/
+#  scp -r $wdir/go-${prj}-*.sh h${i}:/home/h${i}/$codename/
+#done
